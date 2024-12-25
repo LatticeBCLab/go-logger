@@ -47,8 +47,8 @@ var static_lo = NewLogger()
 var TIME_DEVIATION time.Duration
 
 const (
-	_        = iota
-	KB _UNIT = 1 << (iota * 10)
+	_ _UNIT = 1 << (iota * 10)
+	KB
 	MB
 	GB
 	TB
@@ -1012,9 +1012,6 @@ func (t *fileHandler) write(bs []byte) (n int, e error) {
 }
 
 func (t *fileHandler) mustBackUp(addsize int) bool {
-	if t._fileSize == 0 {
-		return false
-	}
 	if t._cutmode&_TIMEMODE == _TIMEMODE {
 		if t._lastPrint > 0 && !isCurrentTime(t._mode, t._lastPrint) {
 			return true

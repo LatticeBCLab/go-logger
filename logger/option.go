@@ -93,8 +93,9 @@ type FileMixedMode struct {
 	Filename   string     // The path to the log file / 日志文件路径
 	Timemode   _MODE_TIME // The time-based rotation mode / 时间切割模式
 	Maxsize    int64      // The maximum file size; when exceeded, a rotation will occur / 文件最大大小，超过该大小时进行切割
-	Maxbuckup  int        // The maximum number of backup files to keep / 保留的最大备份文件数量
-	IsCompress bool       // Whether to enable compression for backup files / 是否启用备份文件的压缩
+	SizeUint   _UNIT
+	Maxbuckup  int  // The maximum number of backup files to keep / 保留的最大备份文件数量
+	IsCompress bool // Whether to enable compression for backup files / 是否启用备份文件的压缩
 }
 
 func (f *FileMixedMode) Cutmode() _CUTMODE {
@@ -110,7 +111,10 @@ func (f *FileMixedMode) FilePath() string {
 }
 
 func (f *FileMixedMode) MaxSize() int64 {
-	return f.Maxsize // Returns the maximum file size for rotation / 返回文件最大大小
+	if int64(f.SizeUint) == 0 {
+		f.SizeUint = 1
+	}
+	return f.Maxsize * int64(f.SizeUint) // Returns the maximum file size for rotation / 返回文件最大大小
 }
 
 func (f *FileMixedMode) MaxBuckup() int {
